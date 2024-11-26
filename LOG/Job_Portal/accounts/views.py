@@ -3,7 +3,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-
+from django.contrib.auth import login 
+from django.urls import reverse
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 def login_view(request):
     if request.method == 'POST':
@@ -48,6 +52,8 @@ def index_view(request):
             'username': user.username,
             'email': user.email,
             'role': 'Admin' if user.is_superuser else 'User',
+            'date_time': user.last_login if user.last_login else "No login history",
+            'delete_url': reverse('delete_user', args=[user.id])
         }
         for user in User.objects.all()
     ]
@@ -59,6 +65,17 @@ def index_view(request):
         'users': users,
     }
     return render(request, 'index.html', context)
+
+@login_required
+def delete_user_view(request, user_id):
+    user_to_delete = get_object_or_404(User, id=user_id)
+
+    # Prevent deletion of superusers
+    if user_to_delete.is_superuser:
+        return HttpResponseForbidden("You cannot delete a superuser.")
+
+    user_to_delete.delete()
+    return redirect('index')
 
 def logout_view(request):
     logout(request)  # Log out the user

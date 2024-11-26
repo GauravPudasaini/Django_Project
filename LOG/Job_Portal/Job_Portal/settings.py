@@ -1,9 +1,6 @@
 from pathlib import Path
 import os
 
-BASE_DIR = Path(r"C:\Users\gaura\Desktop\LOG\Job_Portal")
-LOGIN_REDIRECT_URL = '/accounts/index/'
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -27,9 +24,11 @@ LOGGING = {
     },
 }
 
+LOGIN_REDIRECT_URL = '/accounts/index/'
+TIME_ZONE = 'Asia/Kathmandu'
+USE_TZ = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 DEBUG = True
-
 ROOT_URLCONF = 'Job_Portal.urls'
 
 INSTALLED_APPS = [
@@ -40,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',  
+    'login_history',
 ]
 
+BASE_DIR = Path(r"C:\Users\gaura\Desktop\LOG\Job_Portal")
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
